@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FIND YOUR BOUQUET | 어밍톤플라워</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#4a1a1d;--sub:#8a6e66;--accent:#bf202c;--tint:#f6ecd9;--paper:#f6ecd9;--lace:#eadbbd;--wine:#4a0a10}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--wine);color:var(--ink);font-family:'Gowun Batang','Noto Serif KR',serif;line-height:1.55;padding:8px}
+.script{font-family:'Pinyon Script','Snell Roundhand',cursive;font-weight:400}
+/* lace sheet */
+#app{position:relative;max-width:440px;margin:0 auto;min-height:calc(100vh - 16px);min-height:calc(100dvh - 16px);
+ padding:max(30px,env(safe-area-inset-top)) 30px max(30px,env(safe-area-inset-bottom));display:flex;flex-direction:column;
+ background-color:var(--lace);background-image:radial-gradient(circle,var(--wine) 1.5px,transparent 2.1px),radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1.6px);
+ background-size:11px 11px,11px 11px;background-position:0 0,5.5px 5.5px;
+ border:7px dotted var(--lace);background-clip:padding-box;border-radius:24px;overflow:hidden}
+#app::before{content:"";position:absolute;inset:15px;background:var(--paper);border-radius:6px;box-shadow:0 0 0 1px #cdb88f,inset 0 0 40px rgba(180,140,90,.12)}
+.screen{position:relative;z-index:1;flex:1;display:none;flex-direction:column;animation:in .4s ease both}
+.screen.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.btn{width:100%;border:0;border-radius:22px 30px 24px 32px/30px 22px 32px 24px;background:var(--accent);color:#fff6e8;font:700 18px 'Gowun Batang',serif;padding:19px;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+/* start */
+#start{justify-content:center;align-items:center;text-align:center;color:var(--accent)}
+#hero{width:150px;height:175px;margin:0 auto 4px;color:var(--accent)}
+.small{font-size:13px;letter-spacing:.28em;margin:0}
+#start h1{font-size:clamp(54px,18vw,76px);line-height:1;margin:2px 0 14px}
+#start .q{font-size:20px;font-weight:700;margin:0 0 4px;color:var(--ink)}
+#start .s{font-size:16px;color:var(--sub);margin:0 0 26px}
+/* quiz */
+.top{display:flex;align-items:center;gap:12px;padding-top:4px;color:var(--accent)}
+.bar{flex:1;height:0;border-top:1.5px dashed rgba(191,32,44,.35);position:relative}
+.bar i{position:absolute;left:0;top:-2.5px;height:3.5px;width:0;background:var(--accent);border-radius:4px;transition:width .4s ease}
+.step{font-weight:700;font-size:15px;min-width:38px;text-align:right}
+.qtext{font-size:clamp(23px,6.6vw,28px);font-weight:700;line-height:1.42;margin:34px 0 26px;word-break:keep-all;color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;gap:13px;align-items:center;text-align:left;border:1.5px solid var(--accent);background:transparent;border-radius:20px 26px 22px 28px/26px 20px 28px 22px;padding:17px 16px;min-height:68px;font:400 17px/1.4 'Gowun Batang',serif;color:var(--ink);cursor:pointer;word-break:keep-all;transition:background .15s,transform .12s}
+.opt b{flex:none;width:30px;font:400 28px/1 'Pinyon Script',cursive;color:var(--accent);text-align:center}
+.opt small{display:block;color:var(--sub);font-size:14px;margin-top:2px}
+.opt:active{transform:scale(.98)}
+.opt.sel{background:var(--accent);color:#fff6e8}
+.opt.sel b,.opt.sel small{color:#fff6e8}
+/* load */
+#load{justify-content:center;align-items:center;text-align:center;gap:14px;color:var(--accent)}
+#load p{font-size:20px;font-weight:700;margin:0;color:var(--ink)}
+.spin{animation:spin 3s linear infinite;width:80px;height:80px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* result */
+.card{border:2px solid var(--accent);border-radius:34px 46px 30px 50px/46px 30px 50px 34px;padding:30px 20px 24px;text-align:center;position:relative;margin-top:8px;color:var(--accent)}
+.card .lead{font-size:13px;letter-spacing:.3em;margin:0}
+.card h2{font-size:clamp(56px,19vw,80px);line-height:.95;margin:6px 0 0}
+.flower{width:150px;height:175px;margin:6px auto 8px;display:block}
+.desc1{font-size:18px;font-weight:700;margin:4px 0 8px;word-break:keep-all;line-height:1.5;color:var(--ink)}
+.desc2{font-size:16px;color:#6b4f49;margin:0;word-break:keep-all}
+.brand{margin-top:18px;font-size:11px;letter-spacing:.22em;color:var(--accent)}
+.cta{margin:24px 2px 0;text-align:center}
+.cta h3{font-size:20px;margin:0 0 6px;color:var(--ink)}
+.cta p{margin:0 0 18px;color:#6b4f49;font-size:16px;word-break:keep-all}
+.cta p strong{color:var(--accent)}
+.row{display:flex;gap:10px}
+.row .btn{padding:17px 8px;font-size:16px}
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section class="screen on" id="start">
+  <svg id="hero" viewBox="0 0 120 140"></svg>
+  <p class="small">AMINGTON FLOWER POP-UP</p>
+  <h1 class="script">Find Your<br>Bouquet</h1>
+  <p class="q">내 촬영 부케는 어떤 스타일일까?</p>
+  <p class="s">6문제만 고르면<br>어밍톤이 골라드려요 🌷</p>
+  <button class="btn" id="go">부케 찾으러 가기</button>
+</section>
+
+<section class="screen" id="quiz">
+  <div class="top"><div class="bar"><i id="fill"></i></div><div class="step" id="step">1 / 6</div></div>
+  <h2 class="qtext" id="qtext"></h2>
+  <div class="opts" id="opts"></div>
+</section>
+
+<section class="screen" id="load">
+  <svg class="spin" id="spin" viewBox="0 0 120 140"></svg>
+  <p>음… 당신의 부케를 고르는 중 💐</p>
+</section>
+
+<section class="screen" id="res">
+  <div class="card" id="card">
+    <p class="lead">YOUR BOUQUET IS</p>
+    <h2 class="script" id="rtitle"></h2>
+    <svg class="flower" id="flower" viewBox="0 0 120 140"></svg>
+    <p class="desc1" id="d1"></p>
+    <p class="desc2" id="d2"></p>
+    <div class="brand">AMINGTON FLOWER · POP-UP</div>
+  </div>
+  <div class="cta">
+    <h3>당신의 부케를 직접 만나보세요.</h3>
+    <p>어밍톤 팝업에서<br><strong id="ctaType"></strong> 컬렉션을 찾아보세요 🌷</p>
+    <div class="row">
+      <button class="btn ghost" id="share">결과 공유하기</button>
+      <button class="btn" id="again">다시 테스트하기</button>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+
+const Q=[
+ {q:"촬영 전날, 내 머릿속은?",o:[
+  ["최대한 깔끔하게. 실수 없이 가자",{WHITE:2}],
+  ["예쁘고 사랑스럽게 나오면 됐지 뭐",{PINK:2}],
+  ["한 장은 무조건 강렬하게 남겨야지",{RED:2}],
+  ["남들이 안 하는 거 하고 싶다",{COLORFUL:2}]]},
+ {q:"친구가 “결혼사진 어떻게 찍을 거야?”라고 묻는다면?",o:[
+  ["깨끗하고 오래 봐도 안 질리게",{WHITE:2}],
+  ["몽글몽글하고 로맨틱하게",{PINK:2}],
+  ["살짝 영화 포스터처럼",{RED:2}],
+  ["그냥 나답고 재밌게!",{COLORFUL:2}]]},
+ {q:"드레스 피팅하다가 제일 설레는 순간은?",o:[
+  ["실크 드레스가 딱 떨어질 때",{WHITE:2}],
+  ["레이스랑 쉬폰이 살랑거릴 때",{PINK:2}],
+  ["실루엣이 확 살아날 때",{RED:2}],
+  ["컬러드레스나 독특한 디테일을 발견했을 때",{COLORFUL:2}]]},
+ {q:"부케가 사진 속에서 어떤 역할이면 좋겠어요?",o:[
+  ["“어? 예쁘다” 하고 자연스럽게 보였으면",{WHITE:1,PINK:1}],
+  ["분위기를 더 말랑하게 만들어줬으면",{PINK:2}],
+  ["사진 보자마자 부케부터 눈에 들어왔으면",{RED:2}],
+  ["사진에 한 스푼 장난기를 넣어줬으면",{COLORFUL:2}]]},
+ {q:"부케를 들고 거울 앞에 섰을 때 더 끌리는 건?",o:[
+  ["손에 쏙 들어오고 정돈된 느낌",{COMPACT:2}],
+  ["꽃이 아래로 툭 떨어지는 느낌",{DROP:2}]]},
+ {q:"마지막 한 문제. 사진 찍을 때 나는?",o:[
+  ["“어디에 손 둬야 해요…?”","부케가 안정감 있게 있었으면 좋겠다",{COMPACT:2}],
+  ["포즈 크게 쓰는 편!","꽃도 같이 움직였으면 좋겠다",{DROP:2}]]}
+];
+const R={
+ "WHITE COMPACT":["군더더기 없이 정돈된 분위기를 좋아하는 타입.","드레스의 실루엣을 자연스럽게 살려주는 깨끗한 부케가 잘 어울려요."],
+ "WHITE DROP":["깨끗한 분위기는 좋지만 너무 얌전한 건 아쉬운 타입.","화이트 꽃의 흐르는 선이 사진에 자연스러운 움직임을 더해줘요."],
+ "PINK COMPACT":["사랑스럽고 부드러운 분위기가 잘 어울리는 타입.","손에 쏙 들어오는 핑크 부케가 사진을 로맨틱하게 만들어줘요."],
+ "PINK DROP":["몽글몽글하고 여유로운 장면을 좋아하는 타입.","자연스럽게 흐르는 핑크 꽃의 선이 촬영에 부드러운 분위기를 더해줘요."],
+ "RED COMPACT":["사진에 확실한 한 끗을 남기고 싶은 타입.","작지만 존재감 있는 레드 부케가 강렬한 포인트가 되어줘요."],
+ "RED DROP":["선명한 컬러와 드라마틱한 분위기가 잘 어울리는 타입.","흐르는 레드 부케가 사진 속에서 하나의 오브제처럼 보여요."],
+ "COLORFUL COMPACT":["정형화된 웨딩보다 나다운 장면을 좋아하는 타입.","다양한 컬러가 모인 컴팩트 부케가 사진에 경쾌한 포인트를 만들어줘요."],
+ "COLORFUL DROP":["자유롭고 유니크한 무드를 좋아하는 타입.","여러 컬러와 자연스럽게 흐르는 실루엣이 사진에 재미와 움직임을 더해줘요."]
+};
+const THEME={WHITE:["#8a8760","#f1ead3"],PINK:["#cf4f78","#f6e2dc"],RED:["#bf202c","#f4e0d3"],COLORFUL:["#7a5ad0","#efe6df"]};
+const $=id=>document.getElementById(id);
+let i=0,score,picks,locked;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on','leave'));
+  $(id).classList.add('on'); window.scrollTo(0,0);
+}
+function reset(){score={WHITE:0,PINK:0,RED:0,COLORFUL:0,COMPACT:0,DROP:0};picks=[];i=0;locked=false}
+function render(){
+  const q=Q[i];
+  $('step').textContent=(i+1)+" / 6";
+  $('fill').style.width=(i/6*100)+"%";
+  requestAnimationFrame(()=>$('fill').style.width=((i+1)/6*100)+"%");
+  $('qtext').textContent=q.q;
+  const box=$('opts');box.innerHTML="";
+  q.o.forEach((o,k)=>{
+    const b=document.createElement('button');b.className='opt';
+    const sub=o.length===3?`<small>${o[1]}</small>`:"";
+    b.innerHTML=`<b>${"ABCD"[k]}</b><span>${o[0]}${sub}</span>`;
+    b.onclick=()=>pick(b,o[o.length-1]);
+    box.appendChild(b);
+  });
+  const el=$('quiz');el.classList.remove('on');void el.offsetWidth;el.classList.add('on');
+}
+function pick(btn,pts){
+  if(locked)return;locked=true;btn.classList.add('sel');
+  for(const k in pts)score[k]+=pts[k];
+  picks.push(Object.keys(pts));
+  setTimeout(()=>{
+    if(i<5){i++;locked=false;render()}
+    else{show('load');setTimeout(finish,1700)}
+  },260);
+}
+function finish(){
+  const colors=["WHITE","PINK","RED","COLORFUL"];
+  const max=Math.max(...colors.map(c=>score[c]));
+  const tied=colors.filter(c=>score[c]===max);
+  let color=tied[0];
+  if(tied.length>1){ // 동점: 가장 최근 답변에서 고른 컬러 우선
+    outer:for(let n=3;n>=0;n--){for(const c of picks[n]){if(tied.includes(c)){color=c;break outer}}}
+  }
+  // 동점이면 Q6 답변
+  const shape=score.COMPACT===score.DROP?picks[5][0]:(score.COMPACT>score.DROP?"COMPACT":"DROP");
+  showResult(color,shape);
+}
+function flowerSVG(color,shape){
+  const P=(x,y,a,d)=>[x+Math.cos(a*Math.PI/180)*d,y+Math.sin(a*Math.PI/180)*d].map(n=>n.toFixed(1)).join(' ');
+  const bloom=(x,y,r,c)=>{let d="";for(let k=0;k<5;k++){const a=k*72-90+(x%7),rr=r*(1+.1*Math.sin(k*2.3+x));
+    d+=`M${x} ${y}C${P(x,y,a-38,rr*.95)} ${P(x,y,a-12,rr*1.18)} ${P(x,y,a,rr)}C${P(x,y,a+12,rr*1.18)} ${P(x,y,a+38,rr*.95)} ${x} ${y}`}
+    return `<g stroke="${c}"><path d="${d}"/><path d="M${x-r*.14} ${y} a${r*.14} ${r*.14} 0 1 1 ${r*.2} ${r*.1}"/></g>`};
+  const leaf=(x,y,rot)=>`<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M0 0Q8-7 17 0Q8 7 0 0M2 0H13"/></g>`;
+  const bow=(x,y)=>`<path d="M${x} ${y}C${x-20} ${y-16} ${x-24} ${y+5} ${x} ${y}C${x+20} ${y-16} ${x+24} ${y+5} ${x} ${y}M${x} ${y}Q${x-5} ${y+14} ${x-13} ${y+27}M${x} ${y}Q${x+6} ${y+15} ${x+15} ${y+24}"/>`;
+  const cc=color==="COLORFUL"?["#d9283d","#e58a3a","#7a5ad0","#2f9e75"]:[null,null,null,null];
+  const col=k=>cc[k%4]||"currentColor";
+  let s='<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">';
+  if(shape==="COMPACT"){
+    s+='<path d="M60 96L52 128M60 96L68 128M60 96V130"/>'+leaf(40,84,200)+leaf(80,86,-20)+leaf(30,64,215)+leaf(90,64,-35);
+    [[60,48,24],[34,66,17],[86,66,17],[60,78,15]].forEach((b,k)=>s+=bloom(b[0],b[1],b[2],col(k)));
+    s+=bow(60,102);
+  }else{
+    s+='<path d="M58 6C74 34 38 58 56 92C62 108 54 120 50 132"/>'+leaf(60,30,10)+leaf(46,60,190)+leaf(58,86,-15)+leaf(48,110,200);
+    [[52,22,18],[66,52,15],[44,76,14],[58,102,12]].forEach((b,k)=>s+=bloom(b[0],b[1],b[2],col(k)));
+    s+=bow(60,40);
+  }
+  return s+'</g>';
+}
+function showResult(color,shape){
+  const name=color+" "+shape,[a,b]=R[name],[ac,tint]=THEME[color];
+  document.documentElement.style.setProperty('--accent',ac);
+  document.documentElement.style.setProperty('--tint',tint);
+  $('rtitle').innerHTML=`${color[0]+color.slice(1).toLowerCase()}<br>${shape[0]+shape.slice(1).toLowerCase()}`;
+  $('flower').innerHTML=flowerSVG(color,shape);
+  $('d1').textContent=a;$('d2').textContent=b;$('ctaType').textContent=name;
+  window.__result=name;
+  show('res');
+}
+$('go').onclick=()=>{reset();show('quiz');render()};
+$('again').onclick=()=>{document.documentElement.style.setProperty('--accent','#bf202c');document.documentElement.style.setProperty('--tint','#f6ecd9');show('start')};
+$('share').onclick=async()=>{
+  const text=`내 촬영 부케는 ${window.__result}! 🌷 어밍톤 팝업에서 만나봐요`;
+  try{
+    if(navigator.share){await navigator.share({title:'FIND YOUR BOUQUET',text,url:location.href.split('#')[0]})}
+    else{await navigator.clipboard.writeText(text+" "+location.href);toast('복사했어요!')}
+  }catch(e){}
+};
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1600)}
+reset();
+$('hero').innerHTML=flowerSVG('RED','COMPACT');$('spin').innerHTML=flowerSVG('PINK','COMPACT');
+</script>
+</body>
+</html>
